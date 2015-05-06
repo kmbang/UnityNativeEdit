@@ -11,3 +11,4 @@ Unity Native Input Plugin for both iOS and Android (Unity UI InputField compatib
 ## Etc
 1. NativeEditBox will work with delegate defined in your Unity UI InputField, `On Value Change` and `End Edit`
 2. It's open source and free to use/redistribute!
+3. Please refer to `demo` Unity project.
