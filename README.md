@@ -1,4 +1,4 @@
-## UnityNativeEdit
+## UnityNativeEdit v1.0
 Unity Native Input Plugin for both iOS and Android (Unity UI InputField compatible).
 This means you don't need a separate 'Unity' Input box and you can use all native text functions such as `Select`, `Copy` and `Paste`
 
