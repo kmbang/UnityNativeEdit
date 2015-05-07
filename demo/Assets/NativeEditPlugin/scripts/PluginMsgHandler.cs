@@ -209,6 +209,15 @@ public class PluginMsgHandler : MonoBehaviour {
 		#endif
 		smAndroid.CallStatic("ClosePluginMsgHandler");
 	}
+
+	#else
+	public void InitializeHandler()
+	{
+	}
+	public void FinalizeHandler()
+	{
+	}
+
 	#endif
 
 	
