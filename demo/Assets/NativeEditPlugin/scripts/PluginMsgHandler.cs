@@ -146,7 +146,7 @@ public class PluginMsgHandler : MonoBehaviour {
 		{
 			bool bShow = jsonMsg.GetBool("show");
 			int nKeyHeight = (int)( jsonMsg.GetFloat("keyheight") * (float) Screen.height);
-			FileLog(string.Format("keyshow {0} height {1}", bShow, nKeyHeight));
+			//FileLog(string.Format("keyshow {0} height {1}", bShow, nKeyHeight));
 			if (OnShowKeyboard != null) 
 			{
 				OnShowKeyboard(bShow, nKeyHeight);
@@ -178,7 +178,7 @@ public class PluginMsgHandler : MonoBehaviour {
 		_iOS_InitPluginMsgHandler(this.name);
 		sPluginInitialized = true;
 	}
-
+	
 	public void FinalizeHandler()
 	{
 		#if UNITY_EDITOR
@@ -215,7 +215,7 @@ public class PluginMsgHandler : MonoBehaviour {
 	public JsonObject SendMsgToPlugin(int nSenderId, JsonObject jsonMsg)
 	{
 		#if UNITY_EDITOR
-		return null;
+		return new JsonObject();
 		#endif
 
 		jsonMsg["senderId"] = nSenderId;

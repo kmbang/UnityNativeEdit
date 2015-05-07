@@ -1,10 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/NativeEdit/PluginMsgHandler.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/NativeEditPlugin/demo/demo.cs">
     <Files>
-      <File FileName="Assets/NativeEdit/NativeEditBox.cs" Line="193" Column="25" />
-      <File FileName="Assets/NativeEdit/PluginMsgHandler.cs" Line="134" Column="12" />
-      <File FileName="Assets/demo.cs" Line="15" Column="1" />
+      <File FileName="Assets/NativeEditPlugin/scripts/PluginMsgHandler.cs" Line="218" Column="26" />
+      <File FileName="Assets/NativeEditPlugin/demo/demo.cs" Line="34" Column="2" />
+      <File FileName="Assets/NativeEditPlugin/scripts/NativeEditBox.cs" Line="200" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

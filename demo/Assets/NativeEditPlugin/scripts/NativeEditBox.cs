@@ -48,7 +48,6 @@ public class NativeEditBox : PluginMsgReceiver {
 		public string placeHolder;
 	}
 
-	private string mText;
 	public bool	withDoneButton = true;
 
 	private bool	bNativeEditCreated = false;
@@ -105,7 +104,7 @@ public class NativeEditBox : PluginMsgReceiver {
 	}
 
 
-	protected void OnDestroy()
+	protected new void OnDestroy()
 	{
 		base.OnDestroy();
 	}
@@ -121,10 +120,7 @@ public class NativeEditBox : PluginMsgReceiver {
 	}
 
 	// Use this for initialization
-	void Start () {
-
-		Debug.Log(string.Format("NativeEdit Started"));
-
+	new void Start () {
 		base.Start();
 
 		bNativeEditCreated = false;
@@ -152,7 +148,6 @@ public class NativeEditBox : PluginMsgReceiver {
 		{
 			Debug.LogErrorFormat("No InputField found {0} NativeEditBox Error", this.name);
 			throw new MissingComponentException();
-			return;
 		}
 		
 		Graphic placeHolder = objUnityInput.placeholder;
@@ -164,8 +159,7 @@ public class NativeEditBox : PluginMsgReceiver {
 		Rect rectScreen = GetScreenRectFromRectTransform(this.objUnityText.rectTransform);
 		float fHeightRatio = rectScreen.height / objUnityText.rectTransform.rect.height;
 		mConfig.fontSize = ((float) objUnityText.fontSize) * fHeightRatio;
-		
-		this.mText = objUnityText.text;
+
 		mConfig.textColor = objUnityText.color;
 		mConfig.align = objUnityText.alignment.ToString();
 		mConfig.contentType = objUnityInput.contentType.ToString();
@@ -200,8 +194,6 @@ public class NativeEditBox : PluginMsgReceiver {
 
 	private bool CheckErrorJsonRet(JsonObject jsonRet)
 	{
-		if (jsonRet == null) return true;
-
 		bool bError = jsonRet.GetBool("bError");
 		string strError = jsonRet.GetString("strError");
 		if (bError)
@@ -251,8 +243,7 @@ public class NativeEditBox : PluginMsgReceiver {
 		jsonMsg["msg"] = MSG_SET_TEXT;
 		jsonMsg["text"] = newText;
 
-		JsonObject jsonRet = this.SendPluginMsg(jsonMsg);
-		bool bError = this.CheckErrorJsonRet(jsonRet);
+		this.SendPluginMsg(jsonMsg);
 	}
 
 	public string GetTextNative()
@@ -264,6 +255,8 @@ public class NativeEditBox : PluginMsgReceiver {
 		bool bError = this.CheckErrorJsonRet(jsonRet);
 
 		if (bError) return "";
+
+		Debug.Log(string.Format("GetTextNative {0}", jsonRet.GetString("text")));
 		return jsonRet.GetString("text");
 	}
 
@@ -272,8 +265,7 @@ public class NativeEditBox : PluginMsgReceiver {
 		JsonObject jsonMsg = new JsonObject();
 		
 		jsonMsg["msg"] = MSG_REMOVE;
-		JsonObject jsonRet = this.SendPluginMsg(jsonMsg);
-		bool bError = this.CheckErrorJsonRet(jsonRet);
+		this.SendPluginMsg(jsonMsg);
 	}
 
 	public void SetRectNative(RectTransform rectTrans)
@@ -289,8 +281,7 @@ public class NativeEditBox : PluginMsgReceiver {
 		jsonMsg["width"] = rectScreen.width / Screen.width;
 		jsonMsg["height"] = rectScreen.height / Screen.height;
 
-		JsonObject jsonRet = this.SendPluginMsg(jsonMsg);
-		bool bError = this.CheckErrorJsonRet(jsonRet);
+		this.SendPluginMsg(jsonMsg);
 	}
 
 	public void SetFocusNative(bool bFocus)
@@ -300,8 +291,7 @@ public class NativeEditBox : PluginMsgReceiver {
 		jsonMsg["msg"] = MSG_SET_FOCUS;
 		jsonMsg["isFocus"] = bFocus;
 		
-		JsonObject jsonRet = this.SendPluginMsg(jsonMsg);
-		bool bError = this.CheckErrorJsonRet(jsonRet);
+		this.SendPluginMsg(jsonMsg);
 	}
 
 	public void SetVisible(bool bVisible)
@@ -311,8 +301,7 @@ public class NativeEditBox : PluginMsgReceiver {
 		jsonMsg["msg"] = MSG_SET_VISIBLE;
 		jsonMsg["isVisible"] = bVisible;
 		
-		JsonObject jsonRet = this.SendPluginMsg(jsonMsg);
-		bool bError = this.CheckErrorJsonRet(jsonRet);
+		this.SendPluginMsg(jsonMsg);
 	}
 
 	void ForceSendKeydown_Android(string key)
