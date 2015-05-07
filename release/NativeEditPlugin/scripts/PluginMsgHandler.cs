@@ -63,20 +63,25 @@ public class PluginMsgHandler : MonoBehaviour {
 	
 	private static StreamWriter fileWriter = null;
 
-	public delegate void ShowKeyboardDelegate(bool bKeyboardShow, float fKeyHeight);
+	public delegate void ShowKeyboardDelegate(bool bKeyboardShow, int nKeyHeight);
 	public ShowKeyboardDelegate OnShowKeyboard = null; 
 
 	private static string MSG_SHOW_KEYBOARD = "ShowKeyboard";
 	private static string DEFAULT_NAME = "NativeEditPluginHandler";
+	private static bool   ENABLE_WRITE_LOG = false;
 
 	void Awake()
 	{
 		int tempRandom = (int) UnityEngine.Random.Range(0, 10000.0f);
 		this.name = DEFAULT_NAME + tempRandom.ToString();
-		string fileName = Application.persistentDataPath + "/unity_app.log";
-		fileWriter = File.CreateText(fileName);
-		fileWriter.WriteLine("[LogWriter] Initialized");
-		Debug.Log(string.Format("log location {0}", fileName));
+
+		if (ENABLE_WRITE_LOG)
+		{
+			string fileName = Application.persistentDataPath + "/unity_app.log";
+			fileWriter = File.CreateText(fileName);
+			fileWriter.WriteLine("[LogWriter] Initialized");
+			Debug.Log(string.Format("log location {0}", fileName));
+		}
 		inst = this;
 		this.InitializeHandler();
 	}
@@ -140,11 +145,11 @@ public class PluginMsgHandler : MonoBehaviour {
 		if (msg.Equals(MSG_SHOW_KEYBOARD))
 		{
 			bool bShow = jsonMsg.GetBool("show");
-			float fKeyHeight = jsonMsg.GetFloat("keyheight");
-			//FileLog(string.Format("keyshow {0} height {1}", bShow, fKeyHeight));
+			int nKeyHeight = (int)( jsonMsg.GetFloat("keyheight") * (float) Screen.height);
+			//FileLog(string.Format("keyshow {0} height {1}", bShow, nKeyHeight));
 			if (OnShowKeyboard != null) 
 			{
-				OnShowKeyboard(bShow, fKeyHeight);
+				OnShowKeyboard(bShow, nKeyHeight);
 			}
 		}
 		else
@@ -165,16 +170,20 @@ public class PluginMsgHandler : MonoBehaviour {
 
 	public void InitializeHandler()
 	{
+		#if UNITY_EDITOR
+		return;
+		#endif
 		if (sPluginInitialized) return;
 
-		#if !UNITY_EDITOR
 		_iOS_InitPluginMsgHandler(this.name);
-		#endif
 		sPluginInitialized = true;
 	}
-
+	
 	public void FinalizeHandler()
 	{
+		#if UNITY_EDITOR
+		return;
+		#endif
 		_iOS_ClosePluginMsgHandler();
 	}
 
@@ -183,6 +192,9 @@ public class PluginMsgHandler : MonoBehaviour {
 	private static AndroidJavaClass smAndroid;
 	public void InitializeHandler()
 	{
+		#if UNITY_EDITOR
+		return;
+		#endif
 		if (sPluginInitialized) return;
 
 		smAndroid = new AndroidJavaClass("com.bkmin.android.NativeEditPlugin");
@@ -192,6 +204,9 @@ public class PluginMsgHandler : MonoBehaviour {
 	
 	public void FinalizeHandler()
 	{
+		#if UNITY_EDITOR
+		return;
+		#endif
 		smAndroid.CallStatic("ClosePluginMsgHandler");
 	}
 	#endif
@@ -199,6 +214,10 @@ public class PluginMsgHandler : MonoBehaviour {
 	
 	public JsonObject SendMsgToPlugin(int nSenderId, JsonObject jsonMsg)
 	{
+		#if UNITY_EDITOR
+		return new JsonObject();
+		#endif
+
 		jsonMsg["senderId"] = nSenderId;
 		string strJson = jsonMsg.Serialize();
 
