@@ -32,22 +32,24 @@ using AOT;
 public abstract class PluginMsgReceiver : MonoBehaviour
 {
 	private	int		nReceiverId;
-	protected PluginMsgHandler msgHandler;
 
 	protected void Start()
 	{
-		msgHandler = PluginMsgHandler.getInst();
-		nReceiverId = msgHandler.RegisterAndGetReceiverId(this);
+		nReceiverId = PluginMsgHandler.getInst().RegisterAndGetReceiverId(this);
 	}
 
 	protected void OnDestroy()
 	{
-		msgHandler.RemoveReceiver(nReceiverId);
+		PluginMsgHandler.getInst().RemoveReceiver(nReceiverId);
+	}
+
+	protected void Update()
+	{
 	}
 
 	protected JsonObject SendPluginMsg(JsonObject jsonMsg)
 	{
-		return msgHandler.SendMsgToPlugin(nReceiverId, jsonMsg);
+		return PluginMsgHandler.getInst().SendMsgToPlugin(nReceiverId, jsonMsg);
 	}
 
 	public abstract void OnPluginMsgDirect(JsonObject jsonMsg);  

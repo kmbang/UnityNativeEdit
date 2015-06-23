@@ -14,12 +14,19 @@
 #define MSG_SET_VISIBLE @"SetVisible"
 #define MSG_TEXT_CHANGE @"TextChange"
 #define MSG_TEXT_END_EDIT @"TextEndEdit"
-#define MSG_SHOW_KEYBOARD @"ShowKeyboard"
+
+@interface EditBoxHoldView : UIView
+{
+
+}
+
+-(id) initHoldView:(CGRect) frame;
+
+@end
 
 @interface EditBox : NSObject<UITextFieldDelegate, UITextViewDelegate>
 {
-
-    UIView* editView;
+    UIView*     editView;
     UIViewController* viewController;
     CGRect rectKeyboardFrame;
     UIToolbar* keyboardDoneButtonView;
@@ -31,4 +38,6 @@
 +(JsonObject*) processRecvJsonMsg:(int)nSenderId msg:(JsonObject*) jsonMsg;
 +(void) finalizeEditBox;
 
+-(void) showKeyboard:(bool)isShow;
+-(BOOL) IsFocused;
 @end

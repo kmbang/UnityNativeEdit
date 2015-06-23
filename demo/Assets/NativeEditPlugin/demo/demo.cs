@@ -12,6 +12,13 @@ public class demo : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		rectTrans = testNativeEdit.transform.FindChild("Text").GetComponent<RectTransform>();
+
+		GameObject tempTest = GameObject.Instantiate(testNativeEdit.gameObject);
+		tempTest.transform.SetParent(mainCanvas.transform, false);
+		tempTest.transform.position += new Vector3(0.0f, -250.0f, 0.0f);
+
+		NativeEditBox tempNB = tempTest.GetComponent<NativeEditBox>();;
+		tempNB.SetTextNative("fdfdsfsd");
 	}
 	
 	// Update is called once per frame

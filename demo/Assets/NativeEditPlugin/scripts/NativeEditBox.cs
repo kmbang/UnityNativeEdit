@@ -169,11 +169,13 @@ public class NativeEditBox : PluginMsgReceiver {
 
 	private void onTextChange(string newText)
 	{
+		this.objUnityInput.text = newText;
 		if (this.objUnityInput.onValueChange != null) this.objUnityInput.onValueChange.Invoke(newText);
 	}
 
 	private void onTextEditEnd(string newText)
 	{
+		this.objUnityInput.text = newText;
 		if (this.objUnityInput.onEndEdit != null) this.objUnityInput.onEndEdit.Invoke(newText);
 	}
 
@@ -198,7 +200,7 @@ public class NativeEditBox : PluginMsgReceiver {
 		string strError = jsonRet.GetString("strError");
 		if (bError)
 		{
-			msgHandler.FileLogError(string.Format("NativeEditbox error {0}", strError));
+			PluginMsgHandler.getInst().FileLogError(string.Format("NativeEditbox error {0}", strError));
 		}
 		return bError;
 	}

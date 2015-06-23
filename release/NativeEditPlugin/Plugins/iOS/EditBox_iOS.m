@@ -7,6 +7,7 @@
 
 UIViewController* unityViewController = nil;
 NSMutableDictionary*    dictEditBox = nil;
+EditBoxHoldView*         viewPlugin = nil;
 
 #define DEF_PixelPerPoint 2.2639f // 72 points per inch. iPhone 163DPI
 char    g_unityName[64];
@@ -16,12 +17,45 @@ bool approxEqualFloat(float x, float y)
     return fabs(x-y) < 0.001f;
 }
 
+@implementation EditBoxHoldView
+
+-(id) initHoldView:(CGRect) frame
+{
+    if (self = [super initWithFrame:frame])
+    {
+        UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc] initWithTarget:self    action:@selector(tapAction:)];
+        [self addGestureRecognizer:tap];
+        self.userInteractionEnabled = YES;
+    }
+    return self;
+}
+
+-(void) tapAction:(id) sender
+{
+    for (EditBox *eb in [dictEditBox allValues])
+    {
+        if ([eb IsFocused])
+        {
+            [eb showKeyboard:NO];
+        }
+    }
+}
+
+@end
+
+
 @implementation EditBox
 
 +(void) initializeEditBox:(UIViewController*) _unityViewController  unityName:(const char*) unityName
 {
     unityViewController = _unityViewController;
     dictEditBox = [[NSMutableDictionary alloc] init];
+    
+    CGRect frameView = unityViewController.view.frame;
+    frameView.origin = CGPointMake(0.0f, 0.0f);
+    viewPlugin = [[EditBoxHoldView alloc] initHoldView:frameView];
+    [unityViewController.view addSubview:viewPlugin];
+    
     strcpy(g_unityName, unityName);
 }
 
@@ -69,6 +103,11 @@ bool approxEqualFloat(float x, float y)
         [b remove];
     }
     dictEditBox = nil;
+}
+
+-(BOOL) IsFocused
+{
+    return editView.isFirstResponder;
 }
 
 -(void) sendJsonToUnity:(JsonObject*) json
@@ -318,7 +357,7 @@ bool approxEqualFloat(float x, float y)
         
         editView = textField;
     }
-    [viewController.view addSubview:editView];
+    [viewPlugin addSubview:editView];
 }
 
 -(void) setText:(JsonObject*)json
@@ -441,26 +480,12 @@ bool approxEqualFloat(float x, float y)
     NSDictionary* keyboardInfo = [notification userInfo];
     NSValue* keyboardFrameBegin = [keyboardInfo valueForKey:UIKeyboardFrameBeginUserInfoKey];
     rectKeyboardFrame = [keyboardFrameBegin CGRectValue];
-    float fKeyHeight = rectKeyboardFrame.size.height / viewController.view.bounds.size.height;
-    
-    JsonObject* jsonToUnity = [[JsonObject alloc] init];
-    
-    [jsonToUnity setString:@"msg" value:MSG_SHOW_KEYBOARD];
-    [jsonToUnity setBool:@"show" value:true];
-    [jsonToUnity setFloat:@"keyheight" value:fKeyHeight];
-    [self sendJsonToUnity:jsonToUnity];
+
 }
 
 -(void) keyboardWillHide:(NSNotification*)notification
 {
     if (![editView isFirstResponder]) return;
-    
-    JsonObject* jsonToUnity = [[JsonObject alloc] init];
-    
-    [jsonToUnity setString:@"msg" value:MSG_SHOW_KEYBOARD];
-    [jsonToUnity setBool:@"show" value:false];
-    [jsonToUnity setFloat:@"keyheight" value:0.0f];
-    [self sendJsonToUnity:jsonToUnity];
 
 }
 
